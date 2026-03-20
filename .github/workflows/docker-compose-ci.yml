@@ -2,7 +2,7 @@ name: Docker Compose CI with Trivy Scan
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, dev ]
   pull_request:
     branches: [ main ]
 
@@ -38,7 +38,8 @@ jobs:
           type=ref,event=pr
           type=sha,prefix={{branch}}-
           type=raw,value=latest,enable={{is_default_branch}}
-
+#pushing image only on push to main or dev, not on PRs
+         push: ${{ github.event_name != 'pull_request' }}
     - name: Build Docker image
       uses: docker/build-push-action@v5
       with:
