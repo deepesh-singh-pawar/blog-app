@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+
+  # ── Blog app ────────────────────────────────────────────────────────────────
+  blog:
+    build: .
+    container_name: blog-app
+    ports:
+      - "5000:5000"
+    environment:
+      SECRET_KEY: "super-secret-change-in-production"
+      DATABASE_URL: "sqlite:////data/blog.db"
+      FLASK_ENV: "production"
+    volumes:
+      - blog_data:/data        # SQLite database persists here
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  blog_data:
+    driver: local
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# To run with PostgreSQL instead of SQLite, use this compose override:
+#
+#   blog:
+#     environment:
+#       DATABASE_URL: "postgresql://bloguser:blogpass@db:5432/blogdb"
+#     depends_on:
+#       db:
+#         condition: service_healthy
+#
+#   db:
+#     image: postgres:16
+#     environment:
+#       POSTGRES_DB: blogdb
+#       POSTGRES_USER: bloguser
+#       POSTGRES_PASSWORD: blogpass
+#     volumes:
+#       - pg_data:/var/lib/postgresql/data
+#     healthcheck:
+#       test: ["CMD-SHELL", "pg_isready -U bloguser -d blogdb"]
+#       interval: 10s
+#       timeout: 5s
+#       retries: 5
+#
+#   volumes:
+#     pg_data:
+# ──────────────────────────────────────────────────────────────────────────────
