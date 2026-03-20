@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{% if post %}Edit Post{% else %}New Post{% endif %} — Blog{% endblock %}
+{% block content %}
+
+<h1 class="page-heading">{% if post %}Edit Post{% else %}New Post{% endif %}</h1>
+
+<div class="card">
+  <form method="POST">
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input type="text" id="title" name="title"
+             value="{{ post.title if post else '' }}"
+             placeholder="Enter post title" required>
+    </div>
+
+    <div class="form-group">
+      <label for="content">Content</label>
+      <textarea id="content" name="content" rows="14"
+                placeholder="Write your post content here…" required>{{ post.content if post else '' }}</textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="status">Status</label>
+      <select id="status" name="status">
+        <option value="draft"     {% if post and post.status == 'draft'     %}selected{% endif %}>Draft</option>
+        <option value="published" {% if post and post.status == 'published' %}selected{% endif %}>Published</option>
+      </select>
+    </div>
+
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-primary" type="submit">
+        {% if post %}Save changes{% else %}Create post{% endif %}
+      </button>
+      <a class="btn btn-secondary" href="{{ url_for('index') }}">Cancel</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

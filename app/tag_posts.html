@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}#{{ tag.name }} — Blog{% endblock %}
+{% block content %}
+
+<h1 class="page-heading">Posts tagged: <span style="color:#4f46e5">#{{ tag.name }}</span></h1>
+
+{% if posts %}
+  {% for post in posts %}
+  <div class="card">
+    <a class="card-title" href="{{ url_for('post_detail', slug=post.slug) }}">{{ post.title }}</a>
+    <div class="card-meta">
+      by <strong>{{ post.author.username }}</strong>
+      &mdash; {{ post.published_at.strftime('%b %d, %Y') }}
+    </div>
+    <p class="card-excerpt">{{ post.content[:200] }}{% if post.content|length > 200 %}…{% endif %}</p>
+  </div>
+  {% endfor %}
+{% else %}
+  <div class="empty"><p>No published posts with this tag yet.</p></div>
+{% endif %}
+
+<a class="btn btn-secondary btn-sm" href="{{ url_for('index') }}">&larr; All posts</a>
+
+{% endblock %}
