@@ -9,7 +9,7 @@ from flask_login import (
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # ── App setup ────────────────────────────────────────────────────────────────
-app = Flask(__name__)
+app = Flask(__name__, template_folder="app")
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-secret-change-in-production")
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///blog.db")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
